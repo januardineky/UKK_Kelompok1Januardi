@@ -196,6 +196,9 @@ label.light {
                      <li class="active">
                         <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
                         <ul class="collapse list-unstyled" id="additional_page">
+                            <li>
+                                <a href="/home/inputadmin">> <span>Admin</span></a>
+                            </li>
                            <li>
                               <a href="/home/inputstudent">> <span>Siswa</span></a>
                            </li>
@@ -243,7 +246,7 @@ label.light {
                         </div>
                      </div>
                   </div>
-                  <form action="/home/createmajor" method="post" style="margin-top: 230px">
+                  <form action="/home/createmajor" method="post" style="">
                     @csrf
                     <fieldset>
 

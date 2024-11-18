@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\FlareClient\View;
 
 class UserController extends Controller
 {
@@ -39,44 +40,18 @@ class UserController extends Controller
 
     public function students()
     {
+        $students = Student::with(['user', 'major'])->get();
         $user = Auth::user();
 
         $data = $user;
-        $students = Student::with(['user', 'major'])->get();
 
         return view('students', compact('students','data'));
     }
-
-    // public function search(Request $request)
-    // {
-    //     $user = Auth::user();
-
-    //     $data = $user;
-
-    //     $students = Student::with('user', 'major')
-    //         ->whereHas('user', function($query) use ($request) {
-    //             $query->where('full_name', 'LIKE', '%' . $request->cari . '%')
-    //                   ->orWhere('email', 'LIKE', '%' . $request->cari . '%')
-    //                   ->orWhere('username', 'LIKE', '%' . $request->cari . '%');
-    //         })
-    //         ->orWhere('nisn', 'LIKE', '%' . $request->cari . '%')
-    //         ->orWhereHas('major', function($query) use ($request) {
-    //             $query->where('major_name', 'LIKE', '%' . $request->cari . '%');
-    //         })
-    //         ->get();
-
-    //         return view('students', compact('students','data'));
-    // }
 
     public function search(Request $request)
 {
     $user = Auth::user();
     $data = $user;
-
-    // Validate the search input
-    // $request->validate([
-    //     'cari' => 'nullable|string|max:255',
-    // ]);
 
     // Perform the search
     $students = Student::with('user', 'major')
@@ -95,7 +70,30 @@ class UserController extends Controller
         ->get();
 
     return view('students', compact('students', 'data'));
-}
+    }
+
+    public function createadmin()
+    {
+        $user = Auth::user();
+
+        $data = $user;
+
+        return view('inputadmin', compact('data'));
+    }
+
+    public function inputadmin(Request $request)
+    {
+        User::create([
+            'full_name' => $request->full_name,
+            'email' =>  $request->email,
+            'username' => $request->username,
+            'password' => bcrypt($request->password), // Hash the password
+            'phone_number' => $request->phone_number,
+            'role' => 'admin', // Assuming the role is 'student'
+            'is_active' => 1, // Assuming the user is active by default
+        ]);
+        return redirect('/home');
+    }
 
     public function inputstudents()
     {

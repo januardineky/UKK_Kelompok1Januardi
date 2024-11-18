@@ -246,7 +246,7 @@ label.light {
                         </div>
                      </div>
                   </div>
-                  <form action="/home/createstudent" method="post">
+                  <form action="/home/inputadmin" method="post">
                     @csrf
                     <fieldset>
                       <legend><span class="number">1</span>General</legend>
@@ -265,33 +265,6 @@ label.light {
 
                       <label for="phone number">Phone Number:</label>
                       <input type="text" id="phone number" name="phone_number">
-
-                    </fieldset>
-
-                    <fieldset>
-
-                      <legend><span class="number">2</span>Specific</legend>
-
-                      <label for="nisn">Nisn:</label>
-                      <input type="text" id="nisn" name="nisn">
-
-                      <label for="grade_level">Kelas :</label>
-                      <select id="grade_level" name="grade_level">
-                          <option value=""></option>
-                          <option value="10">X</option>
-                          <option value="11">XI</option>
-                          <option value="12">XII</option>
-                      </select>
-
-                      <label for="major">Jurusan :</label>
-                      <select id="major" name="major_id" required>
-                        <option value=""></option>
-                        @foreach ($majors as $major)
-                            <option value="{{ $major->id }}">{{ $major->major_name }}</option>
-                        @endforeach
-                    </select>
-
-                    </fieldset>
 
                     <input type="submit" style="width: 100%"></input>
 

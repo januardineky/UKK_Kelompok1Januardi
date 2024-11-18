@@ -63,6 +63,9 @@
                      <li class="active">
                         <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
                         <ul class="collapse list-unstyled" id="additional_page">
+                            <li>
+                                <a href="/home/inputadmin">> <span>Admin</span></a>
+                            </li>
                            <li>
                               <a href="/home/inputstudent">> <span>Siswa</span></a>
                            </li>
@@ -226,6 +229,7 @@
             </div>
          </div>
       </div>
+
       <!-- jQuery -->
       <script src="{{ asset('js/jquery.min.js') }}"></script>
       <script src="{{ asset('js/popper.min.js') }}"></script>

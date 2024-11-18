@@ -13,7 +13,7 @@
 </head>
 <body class="d-flex bg-light">
     <div class="container">
-        <div class="row justify-content-center" style="margin-top: 300px">
+        <div class="row justify-content-center" style="margin-top: 120px">
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">

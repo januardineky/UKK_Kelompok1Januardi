@@ -22,6 +22,9 @@ Route::middleware(['status'])->group(function () {
 
     Route::get('/home', [UserController::class, 'home']);
 
+    Route::get('/home/inputadmin', [UserController::class, 'createadmin']);
+    Route::post('/home/inputadmin', [UserController::class, 'inputadmin']);
+
     Route::post('/home/createmajor', [UserController::class, 'createmajors']);
     Route::get('/home/inputmajor', [UserController::class, 'inputmajors']);
     Route::get('/home/editmajor/{id}', [UserController::class, 'editmajors']);
