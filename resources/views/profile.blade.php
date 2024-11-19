@@ -258,6 +258,7 @@
                                             <h3>{{ $data->full_name }}</h3>
                                             <p><strong>Role: </strong>{{ $data->role }}</p>
                                             <ul class="list-unstyled">
+                                                <li><i class="fa fa-user"></i> : {{ $data->username }}</li>
                                             <li><i class="fa fa-envelope-o"></i> : {{ $data->email }}</li>
                                             <li><i class="fa fa-phone"></i> : {{ $data->phone_number }}</li>
                                             <a href="/home/editadmin/{{ $data->id }}" class="btn btn-primary" style="padding: 10px 20px; font-size: 16px;  border-radius: 5px; text-align: center; color: #FFF; text-decoration: none; margin-top: 20px">Edit</a>
@@ -269,7 +270,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                      </div>
                     </div>
                 </div>
             </div>

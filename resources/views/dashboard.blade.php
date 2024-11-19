@@ -220,11 +220,57 @@
                                         </ul>
                                     </div>
                                 </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                    <div class="row column4 white_shd mt-4">
+                        <div class="full graph_head">
+                            <div class="heading1 margin_0">
+                                <h2>Admin Users</h2>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="white_shd full margin_bottom_30">
+                                <div class="table_section padding_infor_info">
+                                    <div class="table-responsive-sm">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Nama</th>
+                                                    <th>Email</th>
+                                                    <th>Username</th>
+                                                    <th>Nomor Telpon</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($admins as $index => $admin)
+                                                <tr>
+                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>{{ $admin->full_name }}</td>
+                                                    <td>{{ $admin->email }}</td>
+                                                    <td>{{ $admin->username }}</td>
+                                                    <td>{{ $admin->phone_number }}</td>
+                                                    <td>
+                                                        <a href="/home/editadmin/{{ $admin->id }}">
+                                                            <button type="button" class="btn btn-primary btn-xs full-width">
+                                                                 Edit
+                                                            </button>
+                                                        </a>
+                                                        <a href="/home/deleteadmin/{{ $admin->id }}" onclick="return window.confirm('Yakin Hapus Data Admin Ini?')" class="btn btn-danger btn-xs full-width">Delete</a>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
                <!-- end dashboard inner -->
             </div>
          </div>

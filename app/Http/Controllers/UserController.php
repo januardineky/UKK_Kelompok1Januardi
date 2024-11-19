@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Assessor;
+use App\Models\CompetencyElement;
+use App\Models\CompetencyStandard;
 use App\Models\Major;
 use App\Models\Student;
 use App\Models\User;
@@ -17,25 +19,178 @@ class UserController extends Controller
     {
         $validate = $request->validate([
             'email' => ['required','email'],
-            'password' => ['required'],
+            'password' => ['required']
         ]);
 
-        if (Auth::attempt($validate)) {
-            return redirect('/home');
+        if (auth()->attempt($validate)) {
+
+            // buat ulang session login
+            $request->session()->regenerate();
+
+            if (auth()->user()->role === 'admin') {
+                return redirect('/home');
+            }
+            else if(auth()->user()->role === 'assessor') {
+                // $id_user = auth()->user()->id;
+                return redirect('/index');
+            }
         }
-        else {
-            return redirect()->back();
-        }
+        return redirect('/');
+
+    }
+
+    public function index()
+    {
+        $user = Auth::user();
+        $data = $user;
+
+        $assessor = $user->assessor;
+
+        $competencyStandards = CompetencyStandard::with(['major'])
+            ->where('assessor_id', $assessor->id)
+            ->get();
+
+        return view('dashboard-assessor', compact('data', 'competencyStandards'));
+    }
+
+    public function profil()
+    {
+        $user = Auth::user();
+
+        $data = $user;
+        return view('profile-assessor', compact('data'));
+    }
+
+    public function inputcompetency()
+    {
+        $user = Auth::user();
+
+        $data = $user;
+        $majors = Major::all();
+        return view('inputcompetency', compact('majors','data'));
+    }
+
+    public function createcompetency(Request $request)
+    {
+        $user = Auth::user();
+
+        // dd($user->assessor);
+
+        CompetencyStandard::create([
+            'unit_code' => $request->unit_code,
+            'unit_title' => $request->unit_title,
+            'unit_description' => $request->unit_description,
+            'major_id' => $request->major_id,
+            'assessor_id' => $user->assessor->id,
+        ]);
+        return redirect('/index');
+    }
+
+    public function editcompetency($id)
+    {
+        $user = Auth::user();
+        $data = $user;
+
+        $major = CompetencyStandard::with('major')->findOrFail($id);
+
+        $majors = Major::all();
+
+        return view('edit-competency', compact('major', 'data', 'majors'));
+    }
+
+    public function updatecompetency(Request $request, $id)
+    {
+        $user = Auth::user();
+        $competencyStandards = CompetencyStandard::findOrFail($id);
+
+        $competencyStandards->unit_code = $request->unit_code;
+        $competencyStandards->unit_title = $request->unit_title;
+        $competencyStandards->unit_description = $request->unit_description;
+        $competencyStandards->major_id = $request->major_id;
+        $competencyStandards->assessor_id = $user->assessor->id;
+
+        $competencyStandards->save();
+
+        return redirect('/index');
+    }
+
+    public function showelement($id)
+    {
+        $user = Auth::user();
+        $data = $user;
+        $competencyStandard = CompetencyStandard::with('elements')->find($id);
+
+        // dd($competencyStandard->elements);
+
+        return view('element-tables', compact('competencyStandard', 'data'));
+    }
+
+    public function deletestandard($id)
+    {
+        $competencyStandards = CompetencyStandard::findOrFail($id);
+        $competencyStandards->delete();
+        return redirect('/index');
+    }
+
+    public function inputelement()
+    {
+        $user = Auth::user();
+
+        $data = $user;
+        $standards = CompetencyStandard::all();
+        return view('input-element', compact('standards','data'));
+    }
+
+    public function createelement(Request $request)
+    {
+
+        CompetencyElement::create([
+            'criteria' => $request->criteria,
+            'competency_id' => $request->competency_id,
+        ]);
+        return redirect('/index');
+    }
+
+    public function editelement($id)
+    {
+        $user = Auth::user();
+        $data = $user;
+
+        $element = CompetencyElement::findOrFail($id);
+
+        $standards = CompetencyStandard::all();
+
+        return view('edit-element', compact('element', 'data', 'standards'));
+    }
+
+    public function updateelement(Request $request, $id)
+    {
+        $element = CompetencyElement::findOrFail($id);
+
+        $element->criteria = $request->criteria;
+        $element->competency_id = $request->competency_id;
+
+        $element->save();
+
+        return redirect('/index');
+    }
+
+    public function deleteelement($id)
+    {
+        $admin = CompetencyElement::findOrFail($id);
+        $admin->delete();
+        return redirect('/index');
     }
 
     public function home()
     {
+        $admins = User::where('role', 'admin')->get();
         $user = Auth::user();
         $data = $user;
         $majors = Major::all();
         $assessors = Assessor::with('user')->get();
 
-        return view('dashboard', compact('data', 'assessors','majors'));
+        return view('dashboard', compact('data', 'assessors','majors','admins'));
     }
 
     public function students()
@@ -92,6 +247,13 @@ class UserController extends Controller
             'role' => 'admin', // Assuming the role is 'student'
             'is_active' => 1, // Assuming the user is active by default
         ]);
+        return redirect('/home');
+    }
+
+    public function deleteadmin($id)
+    {
+        $admin = User::findOrFail($id);
+        $admin->delete();
         return redirect('/home');
     }
 
@@ -374,7 +536,7 @@ class UserController extends Controller
         $user->save();
 
         // Redirect back with a success message
-        return redirect('/home/profile');
+        return redirect('/home');
     }
 
     public function table()

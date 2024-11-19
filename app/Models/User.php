@@ -30,6 +30,10 @@ class User extends Authenticatable
         'is_active'
     ];
 
+    public function assessor(){
+        return $this->hasOne(Assessor::class, 'user_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
