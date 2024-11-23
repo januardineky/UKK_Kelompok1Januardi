@@ -40,40 +40,54 @@
          <div class="inner_container">
             <!-- Sidebar  -->
             <nav id="sidebar">
-               <div class="sidebar_blog_1">
-                  <div class="sidebar_user_info">
-                     <div class="icon_setting"></div>
-                     <div class="user_profle_side">
-                        <div class="user_info">
-                           <h6>{{ $data->full_name }}</h6>
-                           <p><span class="online_animation"></span> Online</p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="sidebar_blog_2">
+                <div class="sidebar_blog_1">
+                   <div class="sidebar_user_info">
+                      <div class="icon_setting"></div>
+                      <div class="user_profle_side">
+                         <div class="user_info">
+                            <h6>{{ $data->full_name }}</h6>
+                            <p><span class="online_animation"></span> Online</p>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div class="sidebar_blog_2">
 
-                  <ul class="list-unstyled components">
-                     <li class="active">
-                        <a href="/index"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
-                     </li>
-                     <li>
-                        <a href="/index/table"><i class="fa fa-table purple_color2"></i> <span>Penilaian</span></a>
-                    </li>
-                     <li class="active">
-                        <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
-                        <ul class="collapse list-unstyled" id="additional_page">
+                   <ul class="list-unstyled components">
+                      <li class="active">
+                         <a href="/home"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
+                      </li>
+                      <li><a href="/home/table"><i class="fa fa-table purple_color2"></i> <span>Laporan</span></a></li>
+                      <li>
+                         <a href="/home/students">
+                         <i class="fa fa-mortar-board purple_color"></i> <span>Siswa</span></a>
+                      </li>
+                      <li class="active">
+                         <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
+                         <ul class="collapse list-unstyled" id="additional_page">
+                             <li>
+                                 <a href="/home/inputadmin">> <span>Admin</span></a>
+                             </li>
                             <li>
-                                <a href="/index/inputcompetency">> <span>Standar Kompetensi</span></a>
+                               <a href="/home/inputstudent">> <span>Siswa</span></a>
                             </li>
-                           <li>
-                              <a href="/index/inputelement">> <span>Elemen Kompetensi</span></a>
-                           </li>
-                        </ul>
-                     </li>
-                  </ul>
-               </div>
-            </nav>
+                            <li>
+                               <a href="/home/inputassessor">> <span>Penguji</span></a>
+                            </li>
+                            <li>
+                             <a href="/home/inputmajor">> <span>Jurusan</span></a>
+                            </li>
+                            <li>
+                             <a href="/home/inputcompetency">> <span>Standar Kompetensi</span></a>
+                             </li>
+                             <li>
+                             <a href="/home/inputelement">> <span>Elemen Kompetensi</span></a>
+                             </li>
+                         </ul>
+                      </li>
+                   </ul>
+                </div>
+             </nav>
             <!-- end sidebar -->
             <!-- right content -->
             <div id="content">
@@ -88,7 +102,7 @@
                                  <li>
                                     <a class="dropdown-toggle" data-toggle="dropdown"><span class="name_user">{{ $data->full_name }}</span></a>
                                     <div class="dropdown-menu">
-                                       <a class="dropdown-item" href="/index/profile">My Profile</a>
+                                       <a class="dropdown-item" href="/home/profile">My Profile</a>
                                        <a class="dropdown-item" href="/home/logout"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
                                     </div>
                                  </li>
@@ -112,7 +126,7 @@
                     <div class="white_shd full margin_bottom_30">
                         <div class="full graph_head">
                             <div class="heading1 margin_0">
-                                <h2>Standar Kompetensi</h2>
+                                <h2>Elemen Kompetensi {{ $competencyStandard->unit_title }}</h2>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -147,27 +161,24 @@
                                     <thead>
                                       <tr>
                                         <th>Kode Unit</th>
-                                        <th>Judul Unit</th>
-                                        <th>Deskripsi</th>
-                                        <th>Jurusan</th>
-                                        <th>Kelas</th>
-                                        <th style="width: 10%">Aksi</th>
+                                        <th>Kriteria</th>
+                                        <th style="width: 10%">Action</th>
                                       </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach ($competencyStandards as $standard)
-                                      <tr>
-                                        <td>{{ $standard->unit_code }}</td>
-                                        <td>{{ $standard->unit_title }}</td>
-                                        <td>{{ $standard->unit_description }}</td>
-                                        <td>{{ $standard->major->major_name ?? 'N/A' }}</td>
-                                        <td>{{ $standard->grade_level ?? 'N/A' }}</td>
-                                        <td class="d-flex">
-                                            <a href="/index/detail/{{ $standard->id }}"><button class="btn btn-success" style="margin-right: 10px">Detail</button></a>
-                                            <a href="/index/edit/{{ $standard->id }}"><button class="btn btn-primary" style="margin-right: 10px">Edit</button></a>
-                                            <a href="/index/delete/{{ $standard->id }}" onclick="return window.confirm('Yakin Hapus Data Ini?')" ><button class="btn btn-danger">Delete</button></a>
-                                        </td>
-                                      </tr>
+                                        @foreach ($competencyStandard->elements as $element)
+                                        <tr>
+                                            <td>{{ $competencyStandard->unit_code }}</td>
+                                            <td>{{ $element->criteria }}</td>
+                                            <td class="d-flex">
+                                                <a href="/home/detail/edit/{{ $element->id }}">
+                                                    <button class="btn btn-primary" style="margin-right: 10px">Edit</button>
+                                                </a>
+                                                <a href="/home/detail/delete/{{ $element->id }}" onclick="return window.confirm('Yakin Hapus Data Ini?')">
+                                                    <button class="btn btn-danger">Delete</button>
+                                                </a>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                     </tbody>
                                   </table>

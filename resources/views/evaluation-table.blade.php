@@ -102,86 +102,120 @@
                <!-- dashboard inner -->
                <div class="midde_cont">
                 <div class="container-fluid">
-                    <div class="row column_title">
-                        <div class="col-md-12">
-                            <div class="page_title">
-                                <h2>Dashboard</h2>
+                   <div class="row column_title">
+                      <div class="col-md-12">
+                         <div class="page_title">
+                            <h2>Laporan Ujian {{ $student->user->full_name }}</h2>
+                         </div>
+                      </div>
+                   </div>
+                   <!-- row -->
+                   <div class="row">
+                    <!-- table section -->
+                    <div class="col-md-12">
+                        <div class="white_shd full margin_bottom_30">
+                            <div class="table_section padding_infor_info">
+                                <div class="table-responsive-sm">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Standar Kompetensi</th>
+                                                <th>Penguji</th>
+                                                <th>Elemen Kompetensi</th>
+                                                <th>Nilai</th>
+                                                <th>Status</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if($student->examinations->isNotEmpty())
+                                                <form action="/index/table/exam/{{ $student->id }}" method="post">
+                                                    @csrf
+                                                    @foreach($examinationsByStandard as $standardId => $examinations)
+                                                        @foreach($examinations as $examination)
+                                                            <tr>
+                                                                @if ($loop->first)
+                                                                    <td rowspan="{{ $examinations->count() }}">
+                                                                        {{ $examination->competencyElement->competencyStandard->unit_title }}
+                                                                    </td>
+                                                                    <td rowspan="{{ $examinations->count() }}">
+                                                                        {{ $examination->assessor->user->full_name ?? 'N/A' }}
+                                                                    </td>
+                                                                @endif
+                                                                <td>
+                                                                    {{ $examination->competencyElement->criteria }}
+                                                                </td>
+                                                                <td>
+                                                                    @php
+                                                                        $score = $competencyScores[$examination->competencyElement->competencyStandard->id] ?? 0;
+                                                                        echo $score . '%';
+                                                                    @endphp
+                                                                </td>
+                                                                <td>
+                                                                    @php
+                                                                        $competencyLevel = $competencyLevels[$examination->competencyElement->competencyStandard->id] ?? 'Belum Dinilai';
+                                                                        echo $competencyLevel;
+                                                                    @endphp
+                                                                </td>
+                                                                <td>
+                                                                    <div>
+                                                                        <label>
+                                                                            <input type="radio" name="status[{{ $examination->id }}]" value="1" {{ $examination->status == 1 ? 'checked' : '' }}> Selesai
+                                                                        </label>
+                                                                        <label>
+                                                                            <input type="radio" name="status[{{ $examination->id }}]" value="0" {{ $examination->status == 0 ? 'checked' : '' }}> Belum Selesai
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @endforeach
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td colspan="5">
+                                                                <input type="submit" class="btn btn-primary" value="Simpan Perubahan">
+                                                            </td>
+                                                            <td class="d-flex justify-content-center">
+                                                                <button type="button" class="btn btn-success" style="margin-right: 10px" onclick="setAllCompetent()">Semua Selesai</button>
+                                                                <button type="button" class="btn btn-danger" onclick="setAllNotCompetent()">Semua Belum Selesai</button>
+                                                            </td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </form>
+                                            @else
+                                                <tr>
+                                                    <td colspan="6">Tidak ada data ujian untuk ditampilkan.</td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="white_shd full margin_bottom_30">
-                        <div class="full graph_head">
-                            <div class="heading1 margin_0">
-                                <h2>Standar Kompetensi</h2>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="card">
-                              <div class="card-body">
-                                <!-- Modal -->
-                                <div
-                                  class="modal fade"
-                                  id="addRowModal"
-                                  tabindex="-1"
-                                  role="dialog"
-                                  aria-hidden="true"
-                                >
-                                  <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                      <div class="modal-header border-0">
-                                        <h5 class="modal-title">
-                                          <span class="fw-mediumbold"> New</span>
-                                          <span class="fw-light"> Row </span>
-                                        </h5>
-                                      </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-
-                                <div class="table-responsive">
-                                  <table
-                                    id="add-row"
-                                    class="display table table-striped"
-                                  >
-                                    <thead>
-                                      <tr>
-                                        <th>Kode Unit</th>
-                                        <th>Judul Unit</th>
-                                        <th>Deskripsi</th>
-                                        <th>Jurusan</th>
-                                        <th>Kelas</th>
-                                        <th style="width: 10%">Aksi</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach ($competencyStandards as $standard)
-                                      <tr>
-                                        <td>{{ $standard->unit_code }}</td>
-                                        <td>{{ $standard->unit_title }}</td>
-                                        <td>{{ $standard->unit_description }}</td>
-                                        <td>{{ $standard->major->major_name ?? 'N/A' }}</td>
-                                        <td>{{ $standard->grade_level ?? 'N/A' }}</td>
-                                        <td class="d-flex">
-                                            <a href="/index/detail/{{ $standard->id }}"><button class="btn btn-success" style="margin-right: 10px">Detail</button></a>
-                                            <a href="/index/edit/{{ $standard->id }}"><button class="btn btn-primary" style="margin-right: 10px">Edit</button></a>
-                                            <a href="/index/delete/{{ $standard->id }}" onclick="return window.confirm('Yakin Hapus Data Ini?')" ><button class="btn btn-danger">Delete</button></a>
-                                        </td>
-                                      </tr>
-                                    @endforeach
-                                    </tbody>
-                                  </table>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                </div>
+                </div>
                <!-- end dashboard inner -->
             </div>
          </div>
       </div>
 
       <!-- jQuery -->
+      <script>
+        function setAllCompetent() {
+            // Loop through all radio buttons and set them to "Selesai"
+            document.querySelectorAll('input[type="radio"][value="1"]').forEach(function(radio) {
+                radio.checked = true;
+            });
+        }
+
+        function setAllNotCompetent() {
+            // Loop through all radio buttons and set them to "Belum Selesai"
+            document.querySelectorAll('input[type="radio"][value="0"]').forEach(function(radio) {
+                radio.checked = true;
+            });
+        }
+    </script>
       <script src="{{ asset('js/jquery.min.js') }}"></script>
       <script src="{{ asset('js/popper.min.js') }}"></script>
       <script src="{{ asset('js/bootstrap.min.js') }}"></script>

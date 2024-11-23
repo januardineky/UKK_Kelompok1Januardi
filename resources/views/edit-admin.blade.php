@@ -167,6 +167,8 @@ label.light {
       </style>
    </head>
    <body class="dashboard dashboard_2">
+    @include('sweetalert::alert')
+
       <div class="full_container">
          <div class="inner_container">
             <!-- Sidebar  -->
@@ -207,7 +209,13 @@ label.light {
                            </li>
                            <li>
                             <a href="/home/inputmajor">> <span>Jurusan</span></a>
-                         </li>
+                           </li>
+                           <li>
+                            <a href="/home/inputcompetency">> <span>Standar Kompetensi</span></a>
+                            </li>
+                            <li>
+                            <a href="/home/inputelement">> <span>Elemen Kompetensi</span></a>
+                            </li>
                         </ul>
                      </li>
                   </ul>

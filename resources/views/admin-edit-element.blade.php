@@ -172,63 +172,77 @@ label.light {
          <div class="inner_container">
             <!-- Sidebar  -->
             <nav id="sidebar">
-               <div class="sidebar_blog_1">
-                  <div class="sidebar_user_info">
-                     <div class="icon_setting"></div>
-                     <div class="user_profle_side">
-                        <div class="user_info">
-                           <h6>{{ $data->full_name }}</h6>
-                           <p><span class="online_animation"></span> Online</p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="sidebar_blog_2">
+                <div class="sidebar_blog_1">
+                   <div class="sidebar_user_info">
+                      <div class="icon_setting"></div>
+                      <div class="user_profle_side">
+                         <div class="user_info">
+                            <h6>{{ $data->full_name }}</h6>
+                            <p><span class="online_animation"></span> Online</p>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div class="sidebar_blog_2">
 
-                  <ul class="list-unstyled components">
-                     <li class="active">
-                        <a href="/index"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
-                     </li>
-                     <li>
-                        <a href="/index/table"><i class="fa fa-table purple_color2"></i> <span>Penilaian</span></a>
-                    </li>
-                     <li class="active">
-                        <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
-                        <ul class="collapse list-unstyled" id="additional_page">
+                   <ul class="list-unstyled components">
+                      <li class="active">
+                         <a href="/home"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
+                      </li>
+                      <li><a href="/home/table"><i class="fa fa-table purple_color2"></i> <span>Laporan</span></a></li>
+                      <li>
+                         <a href="/home/students">
+                         <i class="fa fa-mortar-board purple_color"></i> <span>Siswa</span></a>
+                      </li>
+                      <li class="active">
+                         <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
+                         <ul class="collapse list-unstyled" id="additional_page">
+                             <li>
+                                 <a href="/home/inputadmin">> <span>Admin</span></a>
+                             </li>
                             <li>
-                                <a href="/index/inputcompetency">> <span>Standar Kompetensi</span></a>
+                               <a href="/home/inputstudent">> <span>Siswa</span></a>
                             </li>
-                           <li>
-                              <a href="/index/inputelement">> <span>Elemen Kompetensi</span></a>
-                           </li>
-                        </ul>
-                     </li>
-                  </ul>
-               </div>
-            </nav>
-            <!-- end sidebar -->
-            <!-- right content -->
-            <div id="content">
-               <!-- topbar -->
-               <div class="topbar">
-                  <nav class="navbar navbar-expand-lg navbar-light">
-                     <div class="full">
-                        <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
-                        <div class="right_topbar">
-                           <div class="icon_info">
-                              <ul class="user_profile_dd">
-                                 <li>
-                                    <a class="dropdown-toggle" data-toggle="dropdown"><span class="name_user">{{ $data->full_name }}</span></a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/index/profile">My Profile</a>
+                            <li>
+                               <a href="/home/inputassessor">> <span>Penguji</span></a>
+                            </li>
+                            <li>
+                             <a href="/home/inputmajor">> <span>Jurusan</span></a>
+                            </li>
+                            <li>
+                             <a href="/home/inputcompetency">> <span>Standar Kompetensi</span></a>
+                             </li>
+                             <li>
+                             <a href="/home/inputelement">> <span>Elemen Kompetensi</span></a>
+                             </li>
+                         </ul>
+                      </li>
+                   </ul>
+                </div>
+             </nav>
+             <!-- end sidebar -->
+             <!-- right content -->
+             <div id="content">
+                <!-- topbar -->
+                <div class="topbar">
+                   <nav class="navbar navbar-expand-lg navbar-light">
+                      <div class="full">
+                         <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
+                         <div class="right_topbar">
+                            <div class="icon_info">
+                               <ul class="user_profile_dd">
+                                  <li>
+                                     <a class="dropdown-toggle" data-toggle="dropdown"><span class="name_user">{{ $data->full_name }}</span></a>
+                                     <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/home/profile">My Profile</a>
                                         <a class="dropdown-item" href="/home/logout"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
-                                    </div>
-                                 </li>
-                              </ul>
-                           </div>
-                        </div>
-                     </div>
-                  </nav>
+                                     </div>
+                                  </li>
+                               </ul>
+                            </div>
+                         </div>
+                      </div>
+                   </nav>
                </div>
                <!-- end topbar -->
                <!-- dashboard inner -->
@@ -239,12 +253,12 @@ label.light {
                         </div>
                      </div>
                   </div>
-                  <form action="/index/inputelement" method="post">
+                  <form action="/home/detail/edit/{{ $element->id }}" method="post">
                     @csrf
                     <fieldset>
 
                       <label for="criteria">Kriteria :</label>
-                      <textarea id="criteria" name="criteria"></textarea>
+                      <textarea id="criteria" name="criteria">{{ old('criteria', $element->criteria) }}</textarea>
 
                     </fieldset>
 
@@ -254,9 +268,11 @@ label.light {
                       <select id="competency" name="competency_id" required>
                         <option value=""></option>
                         @foreach ($standards as $standard)
-                            <option value="{{ $standard->id }}">{{ $standard->unit_title }}</option>
+                            <option value="{{ $standard->id }}" {{ $element->competency_id == $standard->id ? 'selected' : '' }}>
+                                {{ $standard->unit_title }}
+                            </option>
                         @endforeach
-                      </select>
+                    </select>
 
                     </fieldset>
 

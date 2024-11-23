@@ -22,6 +22,20 @@ Route::middleware(['status'])->group(function () {
 
     Route::get('/home', [UserController::class, 'home']);
 
+    Route::get('/home/inputcompetency', [UserController::class, 'admininputcompetency']);
+    Route::post('/home/inputcompetency', [UserController::class, 'admincreatecompetency']);
+    Route::get('/home/delete/{id}', [UserController::class, 'admindeletestandard']);
+    Route::get('/home/edit/{id}', [UserController::class, 'admineditcompetency']);
+    Route::post('/home/updatecompetency/{id}', [UserController::class, 'adminupdatecompetency']);
+
+
+    Route::get('/home/detail/{id}', [UserController::class, 'adminshowelement']);
+    Route::get('/home/inputelement', [UserController::class, 'admininputelement']);
+    Route::post('/home/inputelement', [UserController::class, 'admincreateelement']);
+    Route::get('/home/detail/edit/{id}', [UserController::class, 'admineditelement']);
+    Route::post('/home/detail/edit/{id}', [UserController::class, 'adminupdateelement']);
+    Route::get('/home/detail/delete/{id}', [UserController::class, 'admindeleteelement']);
+
     Route::get('/index', [UserController::class, 'index']);
 
     Route::get('/index/inputcompetency', [UserController::class, 'inputcompetency']);
@@ -36,6 +50,13 @@ Route::middleware(['status'])->group(function () {
     Route::get('/index/detail/edit/{id}', [UserController::class, 'editelement']);
     Route::post('/index/detail/edit/{id}', [UserController::class, 'updateelement']);
     Route::get('/index/detail/delete/{id}', [UserController::class, 'deleteelement']);
+
+    Route::get('/index/table', [UserController::class, 'tableassessor']);
+
+    Route::get('/students/filter', [UserController::class, 'filterStudents']);
+
+    Route::get('/index/table/exam/{id}', [UserController::class, 'assessorexam']);
+    Route::post('/index/table/exam/{id}', [UserController::class, 'updateExaminationStatus']);
 
     Route::get('/home/inputadmin', [UserController::class, 'createadmin']);
     Route::post('/home/inputadmin', [UserController::class, 'inputadmin']);
@@ -63,6 +84,8 @@ Route::middleware(['status'])->group(function () {
     Route::get('/home/deleteassessor/{id}', [UserController::class, 'deleteassessor']);
 
     Route::get('/index/profile', [UserController::class, 'profil']);
+    Route::get('/editassessorpr/{id}', [UserController::class, 'editprofileassessor']);
+    Route::post('/editassessorpr/{id}', [UserController::class, 'updateassessor']);
 
     Route::get('/home/profile', [UserController::class, 'profile']);
     Route::get('/home/editadmin/{id}', [UserController::class, 'editprofile']);

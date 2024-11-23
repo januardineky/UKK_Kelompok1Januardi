@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('unit_code',32);
             $table->string('unit_title', 64);
             $table->text('unit_description');
+            $table->integer('grade_level');
             $table->unsignedBigInteger('major_id');
             $table->unsignedBigInteger('assessor_id');
             $table->foreign('major_id')->references('id')->on('majors')->cascadeOnDelete()->cascadeOnUpdate();

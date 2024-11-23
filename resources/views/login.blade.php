@@ -12,6 +12,7 @@
     {{-- <link rel="stylesheet" href="style.css" /> --}}
 </head>
 <body class="d-flex bg-light">
+    @include('sweetalert::alert')
     <div class="container">
         <div class="row justify-content-center" style="margin-top: 120px">
             <div class="col-md-4">

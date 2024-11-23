@@ -163,7 +163,8 @@ label.light {
   }
 
 }
-</style>
+
+      </style>
    </head>
    <body class="dashboard dashboard_2">
     @include('sweetalert::alert')
@@ -172,40 +173,40 @@ label.light {
          <div class="inner_container">
             <!-- Sidebar  -->
             <nav id="sidebar">
-               <div class="sidebar_blog_1">
-                  <div class="sidebar_user_info">
-                     <div class="icon_setting"></div>
-                     <div class="user_profle_side">
-                        <div class="user_info">
-                           <h6>{{ $data->full_name }}</h6>
-                           <p><span class="online_animation"></span> Online</p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="sidebar_blog_2">
+                <div class="sidebar_blog_1">
+                   <div class="sidebar_user_info">
+                      <div class="icon_setting"></div>
+                      <div class="user_profle_side">
+                         <div class="user_info">
+                            <h6>{{ $data->full_name }}</h6>
+                            <p><span class="online_animation"></span> Online</p>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div class="sidebar_blog_2">
 
-                  <ul class="list-unstyled components">
-                     <li class="active">
-                        <a href="/index"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
-                     </li>
-                     <li>
+                   <ul class="list-unstyled components">
+                      <li class="active">
+                         <a href="/index"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
+                      </li>
+                      <li>
                         <a href="/index/table"><i class="fa fa-table purple_color2"></i> <span>Penilaian</span></a>
                     </li>
-                     <li class="active">
-                        <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
-                        <ul class="collapse list-unstyled" id="additional_page">
+                      <li class="active">
+                         <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
+                         <ul class="collapse list-unstyled" id="additional_page">
+                             <li>
+                                 <a href="/index/inputcompetency">> <span>Standar Kompetensi</span></a>
+                             </li>
                             <li>
-                                <a href="/index/inputcompetency">> <span>Standar Kompetensi</span></a>
+                               <a href="/index/inputelement">> <span>Elemen Kompetensi</span></a>
                             </li>
-                           <li>
-                              <a href="/index/inputelement">> <span>Elemen Kompetensi</span></a>
-                           </li>
-                        </ul>
-                     </li>
-                  </ul>
-               </div>
-            </nav>
+                         </ul>
+                      </li>
+                   </ul>
+                </div>
+             </nav>
             <!-- end sidebar -->
             <!-- right content -->
             <div id="content">
@@ -220,8 +221,8 @@ label.light {
                                  <li>
                                     <a class="dropdown-toggle" data-toggle="dropdown"><span class="name_user">{{ $data->full_name }}</span></a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/index/profile">My Profile</a>
-                                        <a class="dropdown-item" href="/home/logout"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
+                                       <a class="dropdown-item" href="/index/profile">My Profile</a>
+                                       <a class="dropdown-item" href="/home/logout"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
                                     </div>
                                  </li>
                               </ul>
@@ -239,30 +240,44 @@ label.light {
                         </div>
                      </div>
                   </div>
-                  <form action="/index/inputelement" method="post">
+                  <form action="/editassessorpr/{{ $assessor->id }}" method="post">
                     @csrf
                     <fieldset>
+                        <legend><span class="number">1</span> General</legend>
 
-                      <label for="criteria">Kriteria :</label>
-                      <textarea id="criteria" name="criteria"></textarea>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="full_name" value="{{ old('full_name', $assessor->user->full_name) }}" required>
 
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" value="{{ old('email', $assessor->user->email) }}" required>
+
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" value="{{ old('username', $assessor->user->username) }}" required>
+
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" placeholder="Leave blank to keep current password">
+
+                        <label for="phone_number">Phone Number:</label>
+                        <input type="text" id="phone_number" name="phone_number" value="{{ old('phone_number', $assessor->user->phone_number) }}" required>
                     </fieldset>
 
                     <fieldset>
+                        <legend><span class="number">2</span> Specific</legend>
 
-                      <label for="competency">Standar Kompetensi :</label>
-                      <select id="competency" name="competency_id" required>
-                        <option value=""></option>
-                        @foreach ($standards as $standard)
-                            <option value="{{ $standard->id }}">{{ $standard->unit_title }}</option>
-                        @endforeach
-                      </select>
+                        <label for="assessor_type">Jenis Penguji :</label>
+                        <select id="assessor_type" name="assessor_type" required>
+                            <option value=""></option>
+                            <option value="External" {{ $assessor->assessor_type == 'external' ? 'selected' : '' }}>External</option>
+                            <option value="Internal" {{ $assessor->assessor_type == 'internal' ? 'selected' : '' }}>Internal</option>
+                        </select>
+
+                        <label for="description">Description:</label>
+                        <textarea id="description" name="description">{{ old('description', $assessor->description) }}</textarea>
 
                     </fieldset>
 
-                    <input type="submit" style="width: 100%"></input>
-
-                  </form>
+                    <input type="submit" class="btn btn-primary" style="width: 100%" value="Update Assessor">
+                </form>
                </div>
                <!-- end dashboard inner -->
             </div>

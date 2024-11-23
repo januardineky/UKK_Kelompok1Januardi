@@ -167,6 +167,8 @@ label.light {
       </style>
    </head>
    <body class="dashboard dashboard_2">
+    @include('sweetalert::alert')
+
       <div class="full_container">
          <div class="inner_container">
             <!-- Sidebar  -->
@@ -188,14 +190,17 @@ label.light {
                      <li class="active">
                         <a href="/index"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
                      </li>
+                     <li>
+                        <a href="/index/table"><i class="fa fa-table purple_color2"></i> <span>Penilaian</span></a>
+                    </li>
                      <li class="active">
                         <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
                         <ul class="collapse list-unstyled" id="additional_page">
                             <li>
-                                <a href="/index/inputcompetency">> <span>Admin</span></a>
+                                <a href="/index/inputcompetency">> <span>Standar Kompetensi</span></a>
                             </li>
                            <li>
-                              <a href="/index/inputelement">> <span>Siswa</span></a>
+                              <a href="/index/inputelement">> <span>Elemen Kompetensi</span></a>
                            </li>
                         </ul>
                      </li>
@@ -258,6 +263,14 @@ label.light {
                                 </option>
                             @endforeach
                         </select>
+
+                        <label for="grade_level">Kelas:</label>
+                        <select id="grade_level" name="grade_level" required>
+                            <option value="10" {{ $major->grade_level == 10 ? 'selected' : '' }}>X</option>
+                            <option value="11" {{ $major->grade_level == 11 ? 'selected' : '' }}>XI</option>
+                            <option value="12" {{ $major->grade_level == 12 ? 'selected' : '' }}>XII</option>
+                        </select>
+
                     </fieldset>
 
                     <input type="submit" style="width: 100%" value="Update">

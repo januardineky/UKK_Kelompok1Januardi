@@ -18,7 +18,7 @@ class CompetencyStandard extends Model
 
     public function assessor()
     {
-        return $this->belongsTo(Assessor::class);
+        return $this->belongsTo(Assessor::class, 'assessor_id');
     }
 
     public function elements()

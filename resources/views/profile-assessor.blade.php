@@ -34,6 +34,8 @@
       <![endif]-->
    </head>
    <body class="dashboard dashboard_2">
+    @include('sweetalert::alert')
+
       <div class="full_container">
          <div class="inner_container">
             <!-- Sidebar  -->
@@ -55,6 +57,9 @@
                      <li class="active">
                         <a href="/index"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
                      </li>
+                     <li>
+                        <a href="/index/table"><i class="fa fa-table purple_color2"></i> <span>Penilaian</span></a>
+                    </li>
                      <li class="active">
                         <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
                         <ul class="collapse list-unstyled" id="additional_page">
@@ -115,7 +120,7 @@
                                         <li><i class="fa fa-user"></i> : {{ $data->username }}</li>
                                     <li><i class="fa fa-envelope-o"></i> : {{ $data->email }}</li>
                                     <li><i class="fa fa-phone"></i> : {{ $data->phone_number }}</li>
-                                    <a href="/home/editadmin/{{ $data->id }}" class="btn btn-primary" style="padding: 10px 20px; font-size: 16px;  border-radius: 5px; text-align: center; color: #FFF; text-decoration: none; margin-top: 20px">Edit</a>
+                                    <a href="/editassessorpr/{{ $assessor->id }}" class="btn btn-primary" style="padding: 10px 20px; font-size: 16px;  border-radius: 5px; text-align: center; color: #FFF; text-decoration: none; margin-top: 20px">Edit</a>
                                     </ul>
                                 </div>
                             </div>

@@ -34,6 +34,8 @@
       <![endif]-->
    </head>
    <body class="dashboard dashboard_2">
+    @include('sweetalert::alert')
+
       <div class="full_container">
          <div class="inner_container">
             <!-- Sidebar  -->
@@ -75,6 +77,12 @@
                            <li>
                               <a href="/home/inputmajor">> <span>Jurusan</span></a>
                            </li>
+                           <li>
+                            <a href="/home/inputcompetency">> <span>Standar Kompetensi</span></a>
+                            </li>
+                            <li>
+                            <a href="/home/inputelement">> <span>Elemen Kompetensi</span></a>
+                            </li>
                         </ul>
                      </li>
                   </ul>
@@ -165,14 +173,6 @@
                 </div>
                 <!-- end row -->
              </div>
-                  <!-- footer -->
-                  <div class="container-fluid">
-                     <div class="footer">
-                        <p>Copyright © 2018 Designed by html.design. All rights reserved.<br><br>
-                           Distributed By: <a href="https://themewagon.com/">ThemeWagon</a>
-                        </p>
-                     </div>
-                  </div>
                </div>
                <!-- end dashboard inner -->
             </div>

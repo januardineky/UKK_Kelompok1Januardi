@@ -55,34 +55,20 @@
 
                   <ul class="list-unstyled components">
                      <li class="active">
-                        <a href="/home"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
+                        <a href="/index"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
                      </li>
-                     <li><a href="/home/table"><i class="fa fa-table purple_color2"></i> <span>Laporan</span></a></li>
                      <li>
-                        <a href="/home/students">
-                        <i class="fa fa-mortar-board purple_color"></i> <span>Siswa</span></a>
-                     </li>
+                        <a href="/index/table"><i class="fa fa-table purple_color2"></i> <span>Penilaian</span></a>
+                    </li>
                      <li class="active">
                         <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
                         <ul class="collapse list-unstyled" id="additional_page">
                             <li>
-                                <a href="/home/inputadmin">> <span>Admin</span></a>
+                                <a href="/index/inputcompetency">> <span>Standar Kompetensi</span></a>
                             </li>
                            <li>
-                              <a href="/home/inputstudent">> <span>Siswa</span></a>
+                              <a href="/index/inputelement">> <span>Elemen Kompetensi</span></a>
                            </li>
-                           <li>
-                              <a href="/home/inputassessor">> <span>Penguji</span></a>
-                           </li>
-                           <li>
-                            <a href="/home/inputmajor">> <span>Jurusan</span></a>
-                         </li>
-                         <li>
-                            <a href="/home/inputcompetency">> <span>Standar Kompetensi</span></a>
-                            </li>
-                            <li>
-                            <a href="/home/inputelement">> <span>Elemen Kompetensi</span></a>
-                            </li>
                         </ul>
                      </li>
                   </ul>
@@ -102,7 +88,7 @@
                                  <li>
                                     <a class="dropdown-toggle" data-toggle="dropdown"><span class="name_user">{{ $data->full_name }}</span></a>
                                     <div class="dropdown-menu">
-                                       <a class="dropdown-item" href="/home/profile">My Profile</a>
+                                       <a class="dropdown-item" href="/index/profile">My Profile</a>
                                        <a class="dropdown-item" href="/home/logout"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
                                     </div>
                                  </li>
@@ -113,6 +99,7 @@
                   </nav>
                </div>
                <!-- end topbar -->
+               <!-- dashboard inner -->
                <div class="midde_cont">
                 <div class="container-fluid">
                    <div class="row column_title">
@@ -123,6 +110,14 @@
                       </div>
                    </div>
                    <!-- row -->
+                   <div class="form-group">
+                    <select id="gradeLevelSelect" class="form-control">
+                        <option value="">Pilih Kelas</option>
+                        <option value="10">X</option>
+                        <option value="11">XI</option>
+                        <option value="12">XII</option>
+                    </select>
+                </div>
                    <div class="row">
                       <!-- table section -->
                       <div class="col-md-12">
@@ -164,7 +159,7 @@
                                    <th>Aksi</th>
                                 </tr>
                              </thead>
-                                <tbody>
+                                <tbody id="studentTableBody">
                                     @foreach($students as $index => $student)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
@@ -173,7 +168,7 @@
                                         <td>{{ $student->grade_level }}</td>
                                         <td>{{ $student->major->major_name }}</td>
                                         <td>
-                                            <a href="/home/table/exam/{{ $student->id }}">
+                                            <a href="/index/table/exam/{{ $student->id }}">
                                                 <button type="button" class="btn btn-success btn-xs full-width">
                                                     <i class="fa fa-search-plus"></i> Lihat Detail
                                                 </button>
@@ -191,15 +186,16 @@
                     </div>
                    </div>
                 </div>
-             </div>
-             <!-- end dashboard inner -->
+               <!-- end dashboard inner -->
             </div>
          </div>
       </div>
+
       <!-- jQuery -->
       <script src="{{ asset('js/jquery.min.js') }}"></script>
       <script src="{{ asset('js/popper.min.js') }}"></script>
       <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+      <script src="{{ asset('js/datatables.min.js') }}"></script>
       <!-- wow animation -->
       <script src="{{ asset('js/animate.js') }}"></script>
       <!-- select country -->
@@ -219,64 +215,95 @@
       <!-- custom js -->
       <script src="{{ asset('js/custom.js') }}"></script>
       <script src="{{ asset('js/chart_custom_style1.js') }}js/chart_custom_style1.js"></script>
-      <script src="{{ asset('js/datatables.min.js') }}"></script>
-
       <script>
-        $(document).ready(function () {
-          $("#basic-datatables").DataTable({});
+      $(document).ready(function () {
+        $("#basic-datatables").DataTable({});
 
-          $("#multi-filter-select").DataTable({
-            pageLength: 5,
-            initComplete: function () {
-              this.api()
-                .columns()
-                .every(function () {
-                  var column = this;
-                  var select = $(
-                    '<select class="form-select"><option value=""></option></select>'
-                  )
-                    .appendTo($(column.footer()).empty())
-                    .on("change", function () {
-                      var val = $.fn.dataTable.util.escapeRegex($(this).val());
+        $("#multi-filter-select").DataTable({
+          pageLength: 5,
+          initComplete: function () {
+            this.api()
+              .columns()
+              .every(function () {
+                var column = this;
+                var select = $(
+                  '<select class="form-select"><option value=""></option></select>'
+                )
+                  .appendTo($(column.footer()).empty())
+                  .on("change", function () {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
 
-                      column
-                        .search(val ? "^" + val + "$" : "", true, false)
-                        .draw();
-                    });
+                    column
+                      .search(val ? "^" + val + "$" : "", true, false)
+                      .draw();
+                  });
 
-                  column
-                    .data()
-                    .unique()
-                    .sort()
-                    .each(function (d, j) {
-                      select.append(
-                        '<option value="' + d + '">' + d + "</option>"
-                      );
-                    });
-                });
-            },
-          });
-
-          // Add Row
-          $("#add-row").DataTable({
-            pageLength: 5,
-          });
-
-          var action =
-            '<td> <div class="form-button-action"> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task"> <i class="fa fa-edit"></i> </button> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove"> <i class="fa fa-times"></i> </button> </div> </td>';
-
-          $("#addRowButton").click(function () {
-            $("#add-row")
-              .dataTable()
-              .fnAddData([
-                $("#addName").val(),
-                $("#addPosition").val(),
-                $("#addOffice").val(),
-                action,
-              ]);
-            $("#addRowModal").modal("hide");
-          });
+                column
+                  .data()
+                  .unique()
+                  .sort()
+                  .each(function (d, j) {
+                    select.append(
+                      '<option value="' + d + '">' + d + "</option>"
+                    );
+                  });
+              });
+          },
         });
-        </script>
+
+        // Add Row
+        $("#add-row").DataTable({
+          pageLength: 5,
+        });
+
+        var action =
+          '<td> <div class="form-button-action"> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task"> <i class="fa fa-edit"></i> </button> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove"> <i class="fa fa-times"></i> </button> </div> </td>';
+
+        $("#addRowButton").click(function () {
+          $("#add-row")
+            .dataTable()
+            .fnAddData([
+              $("#addName").val(),
+              $("#addPosition").val(),
+              $("#addOffice").val(),
+              action,
+            ]);
+          $("#addRowModal").modal("hide");
+        });
+      });
+      </script>
+      <script>
+        document.getElementById('gradeLevelSelect').addEventListener('change', function() {
+    const selectedGradeLevel = this.value;
+
+    fetch(`/students/filter?grade_level=${selectedGradeLevel}`)
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('studentTableBody');
+            tbody.innerHTML = ''; // Clear existing rows
+
+            data.students.forEach((student, index) => {
+                const row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${student.user.full_name}</td>
+                    <td>${student.nisn}</td>
+                    <td>${student.grade_level}</td>
+                    <td>${student.major.major_name}</td>
+                    <td>
+                        <a href="/index/table/exam/${student.id}">
+                            <button type="button" class="btn btn-success btn-xs full-width">
+                                <i class="fa fa-search-plus"></i> Lihat Detail
+                            </button>
+                        </a>
+                    </td>
+                </tr>`;
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching students:', error);
+        });
+});
+      </script>
    </body>
 </html>

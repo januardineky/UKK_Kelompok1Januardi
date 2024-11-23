@@ -34,6 +34,8 @@
       <![endif]-->
    </head>
    <body class="dashboard dashboard_2">
+    @include('sweetalert::alert')
+
       <div class="full_container">
          <div class="inner_container">
             <!-- Sidebar  -->
@@ -75,6 +77,12 @@
                            <li>
                             <a href="/home/inputmajor">> <span>Jurusan</span></a>
                          </li>
+                         <li>
+                            <a href="/home/inputcompetency">> <span>Standar Kompetensi</span></a>
+                            </li>
+                            <li>
+                            <a href="/home/inputelement">> <span>Elemen Kompetensi</span></a>
+                            </li>
                         </ul>
                      </li>
                   </ul>
@@ -121,17 +129,17 @@
                          <div class="white_shd full margin_bottom_30">
                             <div class="table_section padding_infor_info">
                                <div class="table-responsive-sm">
-                                  <table class="table">
-                                     <thead>
+                                <table class="table">
+                                    <thead>
                                         <tr>
-                                           <th>Jurusan</th>
-                                           <th>Standar Kompetensi</th>
-                                           <th>Penguji</th>
-                                           <th>Elemen Kompetensi</th>
-                                           <th>Penilaian</th>
+                                            <th>Jurusan</th>
+                                            <th>Standar Kompetensi</th>
+                                            <th>Penguji</th>
+                                            <th>Elemen Kompetensi</th>
+                                            <th>Penilaian</th>
                                         </tr>
-                                     </thead>
-                                     <tbody>
+                                    </thead>
+                                    <tbody>
                                         @if($student->examinations->isNotEmpty())
                                             @foreach($student->examinations as $examination)
                                                 <tr>
@@ -167,10 +175,11 @@
                                                 <td>Tidak Ada</td>
                                                 <td>Tidak Ada</td>
                                                 <td>Tidak Ada</td>
+                                                <td>Tidak Ada</td>
                                             </tr>
                                         @endif
                                     </tbody>
-                                  </table>
+                                </table>
                                </div>
                             </div>
                          </div>
@@ -178,11 +187,6 @@
                    </div>
                 </div>
                 <!-- footer -->
-                <div class="container-fluid">
-                   <div class="footer">
-                      <p>Copyright © 2018 Designed by html.design. All rights reserved.</p>
-                   </div>
-                </div>
              </div>
              <!-- end dashboard inner -->
             </div>

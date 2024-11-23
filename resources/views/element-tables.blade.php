@@ -34,6 +34,8 @@
       <![endif]-->
    </head>
    <body class="dashboard dashboard_2">
+    @include('sweetalert::alert')
+
       <div class="full_container">
          <div class="inner_container">
             <!-- Sidebar  -->
@@ -55,6 +57,9 @@
                      <li class="active">
                         <a href="/index"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
                      </li>
+                     <li>
+                        <a href="/index/table"><i class="fa fa-table purple_color2"></i> <span>Penilaian</span></a>
+                    </li>
                      <li class="active">
                         <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
                         <ul class="collapse list-unstyled" id="additional_page">

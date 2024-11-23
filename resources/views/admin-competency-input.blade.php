@@ -163,49 +163,63 @@ label.light {
   }
 
 }
-</style>
+
+      </style>
    </head>
    <body class="dashboard dashboard_2">
     @include('sweetalert::alert')
-
       <div class="full_container">
          <div class="inner_container">
             <!-- Sidebar  -->
             <nav id="sidebar">
-               <div class="sidebar_blog_1">
-                  <div class="sidebar_user_info">
-                     <div class="icon_setting"></div>
-                     <div class="user_profle_side">
-                        <div class="user_info">
-                           <h6>{{ $data->full_name }}</h6>
-                           <p><span class="online_animation"></span> Online</p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="sidebar_blog_2">
+                <div class="sidebar_blog_1">
+                   <div class="sidebar_user_info">
+                      <div class="icon_setting"></div>
+                      <div class="user_profle_side">
+                         <div class="user_info">
+                            <h6>{{ $data->full_name }}</h6>
+                            <p><span class="online_animation"></span> Online</p>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div class="sidebar_blog_2">
 
-                  <ul class="list-unstyled components">
-                     <li class="active">
-                        <a href="/index"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
-                     </li>
-                     <li>
-                        <a href="/index/table"><i class="fa fa-table purple_color2"></i> <span>Penilaian</span></a>
-                    </li>
-                     <li class="active">
-                        <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
-                        <ul class="collapse list-unstyled" id="additional_page">
+                   <ul class="list-unstyled components">
+                      <li class="active">
+                         <a href="/home"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
+                      </li>
+                      <li><a href="/home/table"><i class="fa fa-table purple_color2"></i> <span>Laporan</span></a></li>
+                      <li>
+                         <a href="/home/students">
+                         <i class="fa fa-mortar-board purple_color"></i> <span>Siswa</span></a>
+                      </li>
+                      <li class="active">
+                         <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
+                         <ul class="collapse list-unstyled" id="additional_page">
+                             <li>
+                                 <a href="/home/inputadmin">> <span>Admin</span></a>
+                             </li>
                             <li>
-                                <a href="/index/inputcompetency">> <span>Standar Kompetensi</span></a>
+                               <a href="/home/inputstudent">> <span>Siswa</span></a>
                             </li>
-                           <li>
-                              <a href="/index/inputelement">> <span>Elemen Kompetensi</span></a>
-                           </li>
-                        </ul>
-                     </li>
-                  </ul>
-               </div>
-            </nav>
+                            <li>
+                               <a href="/home/inputassessor">> <span>Penguji</span></a>
+                            </li>
+                            <li>
+                             <a href="/home/inputmajor">> <span>Jurusan</span></a>
+                            </li>
+                            <li>
+                             <a href="/home/inputcompetency">> <span>Standar Kompetensi</span></a>
+                             </li>
+                             <li>
+                             <a href="/home/inputelement">> <span>Elemen Kompetensi</span></a>
+                             </li>
+                         </ul>
+                      </li>
+                   </ul>
+                </div>
+             </nav>
             <!-- end sidebar -->
             <!-- right content -->
             <div id="content">
@@ -220,7 +234,7 @@ label.light {
                                  <li>
                                     <a class="dropdown-toggle" data-toggle="dropdown"><span class="name_user">{{ $data->full_name }}</span></a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/index/profile">My Profile</a>
+                                        <a class="dropdown-item" href="/home/profile">My Profile</a>
                                         <a class="dropdown-item" href="/home/logout"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
                                     </div>
                                  </li>
@@ -239,23 +253,47 @@ label.light {
                         </div>
                      </div>
                   </div>
-                  <form action="/index/inputelement" method="post">
+                  <form action="/home/inputcompetency" method="post">
                     @csrf
                     <fieldset>
 
-                      <label for="criteria">Kriteria :</label>
-                      <textarea id="criteria" name="criteria"></textarea>
+                      <label for="kode">Unit Kode:</label>
+                      <input type="text" id="kode" name="unit_code">
+
+                      <label for="title">Unit Title:</label>
+                      <input type="text" id="title" name="unit_title">
+
+                      <label for="description">Deskripsi:</label>
+                      <textarea id="description" name="unit_description"></textarea>
 
                     </fieldset>
 
                     <fieldset>
 
-                      <label for="competency">Standar Kompetensi :</label>
-                      <select id="competency" name="competency_id" required>
+                      <label for="major">Jurusan :</label>
+                      <select id="major" name="major_id" required>
                         <option value=""></option>
-                        @foreach ($standards as $standard)
-                            <option value="{{ $standard->id }}">{{ $standard->unit_title }}</option>
+                        @foreach ($majors as $major)
+                            <option value="{{ $major->id }}">{{ $major->major_name }}</option>
                         @endforeach
+                      </select>
+
+                      <label for="grade_level">Kelas :</label>
+                      <select id="grade_level" name="grade_level">
+                          <option value=""></option>
+                          <option value="10">X</option>
+                          <option value="11">XI</option>
+                          <option value="12">XII</option>
+                      </select>
+
+                      <label for="assessor">Penguji :</label>
+                      <select id="assessor" name="assessor_id" required>
+                          <option value=""></option>
+                          @foreach ($assessors as $assessor)
+                              @if ($assessor->assessor)
+                                  <option value="{{ $assessor->assessor->id }}">{{ $assessor->full_name }}</option>
+                              @endif
+                          @endforeach
                       </select>
 
                     </fieldset>
