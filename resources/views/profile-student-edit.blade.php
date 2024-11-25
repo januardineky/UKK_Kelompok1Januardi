@@ -163,7 +163,8 @@ label.light {
   }
 
 }
-</style>
+
+      </style>
    </head>
    <body class="dashboard dashboard_2">
     @include('sweetalert::alert')
@@ -187,35 +188,7 @@ label.light {
 
                    <ul class="list-unstyled components">
                       <li class="active">
-                         <a href="/home"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
-                      </li>
-                      <li><a href="/home/table"><i class="fa fa-table purple_color2"></i> <span>Laporan</span></a></li>
-                      <li>
-                         <a href="/home/students">
-                         <i class="fa fa-mortar-board purple_color"></i> <span>Siswa</span></a>
-                      </li>
-                      <li class="active">
-                         <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
-                         <ul class="collapse list-unstyled" id="additional_page">
-                             <li>
-                                 <a href="/home/inputadmin">> <span>Admin</span></a>
-                             </li>
-                            <li>
-                               <a href="/home/inputstudent">> <span>Siswa</span></a>
-                            </li>
-                            <li>
-                               <a href="/home/inputassessor">> <span>Penguji</span></a>
-                            </li>
-                            <li>
-                             <a href="/home/inputmajor">> <span>Jurusan</span></a>
-                            </li>
-                            <li>
-                             <a href="/home/inputcompetency">> <span>Standar Kompetensi</span></a>
-                             </li>
-                             <li>
-                             <a href="/home/inputelement">> <span>Elemen Kompetensi</span></a>
-                             </li>
-                         </ul>
+                         <a href="/main"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
                       </li>
                    </ul>
                 </div>
@@ -234,8 +207,8 @@ label.light {
                                  <li>
                                     <a class="dropdown-toggle" data-toggle="dropdown"><span class="name_user">{{ $data->full_name }}</span></a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/home/profile">My Profile</a>
-                                        <a class="dropdown-item" href="/home/logout"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
+                                       <a class="dropdown-item" href="/index/profile">My Profile</a>
+                                       <a class="dropdown-item" href="/home/logout"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
                                     </div>
                                  </li>
                               </ul>
@@ -253,35 +226,53 @@ label.light {
                         </div>
                      </div>
                   </div>
-                  <form action="/home/inputelement" method="post">
+                  <form action="/main/edit/{{ $assessor->id }}" method="post">
                     @csrf
                     <fieldset>
+                        <legend><span class="number">1</span> General</legend>
 
-                      <label for="criteria">Kriteria :</label>
-                      <textarea id="criteria" name="criteria"></textarea>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="full_name" value="{{ old('full_name', $assessor->user->full_name) }}" required>
 
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" value="{{ old('email', $assessor->user->email) }}" required>
+
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" value="{{ old('username', $assessor->user->username) }}" required>
+
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" placeholder="Leave blank to keep current password">
+
+                        <label for="phone_number">Phone Number:</label>
+                        <input type="text" id="phone_number" name="phone_number" value="{{ old('phone_number', $assessor->user->phone_number) }}" required>
                     </fieldset>
 
                     <fieldset>
+                        <legend><span class="number">2</span> Specific</legend>
 
-                      <label for="competency">Standar Kompetensi :</label>
-                      <select id="competency" name="competency_id" required>
-                        <option value=""></option>
-                        @foreach ($standards as $standard)
-                            <option value="{{ $standard->id }}">{{ $standard->unit_title }}</option>
-                        @endforeach
-                      </select>
+                        <label for="nisn">NISN:</label>
+                        <input type="text" id="nisn" name="nisn" value="{{ old('nisn', $assessor->nisn) }}" required>
 
-                      <div id="criteria-container">
-                        <button type="button" id="add-criteria" class="btn btn-primary">Tambah Kriteria</button>
-                        <button type="button" id="remove-criteria" class="btn btn-danger btn-sm remove-criteria">Hapus</button>
-                      </div>
+                        <label for="grade_level">Kelas:</label>
+                        <select id="grade_level" name="grade_level" required>
+                            <option value="10" {{ $assessor->grade_level == 10 ? 'selected' : '' }}>X</option>
+                            <option value="11" {{ $assessor->grade_level == 11 ? 'selected' : '' }}>XI</option>
+                            <option value="12" {{ $assessor->grade_level == 12 ? 'selected' : '' }}>XII</option>
+                        </select>
 
+                        <label for="major">Jurusan:</label>
+                        <select id="major" name="major_id" required>
+                            <option value=""></option>
+                            @foreach ($majors as $major)
+                                <option value="{{ $major->id }}" {{ $assessor->major_id == $major->id ? 'selected' : '' }}>
+                                    {{ $major->major_name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </fieldset>
 
-                    <input type="submit" style="width: 100%"></input>
-
-                  </form>
+                    <input type="submit" class="btn btn-primary" style="width: 100%" value="Update">
+                </form>
                </div>
                <!-- end dashboard inner -->
             </div>
@@ -310,39 +301,5 @@ label.light {
       <!-- custom js -->
       <script src="{{ asset('js/custom.js') }}"></script>
       <script src="{{ asset('js/chart_custom_style1.js') }}js/chart_custom_style1.js"></script>
-      <script>
-        document.getElementById('add-criteria').addEventListener('click', function () {
-            const container = document.getElementById('criteria-container');
-
-            // Buat elemen baru untuk kriteria
-            const newFormGroup = document.createElement('div');
-            newFormGroup.classList.add('form-group');
-
-            // Tambahkan textarea baru
-            newFormGroup.innerHTML = `
-                <label for="criteria">Kriteria :</label>
-                <textarea id="criteria" name="criteria"></textarea>
-                                      <label for="competency">Standar Kompetensi :</label>
-                      <select id="competency" name="competency_id" required>
-                        <option value=""></option>
-                        @foreach ($standards as $standard)
-                            <option value="{{ $standard->id }}">{{ $standard->unit_title }}</option>
-                        @endforeach
-                      </select>
-                    <div id="criteria-container">
-                        <button type="button" id="add-criteria" class="btn btn-primary">Tambah Kriteria</button>
-                        <button type="button" class="btn btn-danger btn-sm remove-criteria">Hapus</button>
-                    </div>
-            `;
-
-            // Tambahkan elemen baru ke container
-            container.appendChild(newFormGroup);
-        });
-        document.getElementById('criteria-container').addEventListener('click', function (e) {
-    if (e.target.classList.contains('remove-criteria')) {
-        e.target.parentElement.remove();
-        }
-        });
-    </script>
    </body>
 </html>

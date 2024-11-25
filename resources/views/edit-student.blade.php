@@ -300,9 +300,8 @@ label.light {
                     </fieldset>
 
                     <input type="submit" class="btn btn-primary" style="width: 100%" value="Update Student">
-                </form>
+                    </form>
                </div>
-               <!-- end dashboard inner -->
             </div>
          </div>
       </div>

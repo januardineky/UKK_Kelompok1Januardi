@@ -55,21 +55,7 @@
 
                   <ul class="list-unstyled components">
                      <li class="active">
-                        <a href="/index"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
-                     </li>
-                     <li>
-                        <a href="/index/table"><i class="fa fa-table purple_color2"></i> <span>Penilaian</span></a>
-                    </li>
-                     <li class="active">
-                        <a href="#additional_page" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-plus-square-o green_color"></i> <span>Input</span></a>
-                        <ul class="collapse list-unstyled" id="additional_page">
-                            <li>
-                                <a href="/index/inputcompetency">> <span>Standar Kompetensi</span></a>
-                            </li>
-                           <li>
-                              <a href="/index/inputelement">> <span>Elemen Kompetensi</span></a>
-                           </li>
-                        </ul>
+                        <a href="/main"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
                      </li>
                   </ul>
                </div>
@@ -88,7 +74,7 @@
                                  <li>
                                     <a class="dropdown-toggle" data-toggle="dropdown"><span class="name_user">{{ $data->full_name }}</span></a>
                                     <div class="dropdown-menu">
-                                       <a class="dropdown-item" href="/index/profile">My Profile</a>
+                                       <a class="dropdown-item" href="/main/profile">My Profile</a>
                                        <a class="dropdown-item" href="/home/logout"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
                                     </div>
                                  </li>
@@ -112,69 +98,77 @@
                     <div class="white_shd full margin_bottom_30">
                         <div class="full graph_head">
                             <div class="heading1 margin_0">
-                                <h2>Standar Kompetensi</h2>
+                                <h2>Laporan Ujian {{ $data->full_name }}</h2>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="card">
-                              <div class="card-body">
-                                <!-- Modal -->
-                                <div
-                                  class="modal fade"
-                                  id="addRowModal"
-                                  tabindex="-1"
-                                  role="dialog"
-                                  aria-hidden="true"
-                                >
-                                  <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                      <div class="modal-header border-0">
-                                        <h5 class="modal-title">
-                                          <span class="fw-mediumbold"> New</span>
-                                          <span class="fw-light"> Row </span>
-                                        </h5>
-                                      </div>
-                                      </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="examinations-table" class="display table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Penguji</th>
+                                                    <th>Standar Kompetensi</th>
+                                                    <th>Elemen Kompetensi</th>
+                                                    <th>Nilai</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if($student->examinations->isNotEmpty())
+                                                    @foreach($examinationsByStandard as $standardId => $examinations)
+                                                        @foreach($examinations as $examination)
+                                                            <tr>
+                                                                @if ($loop->first)
+                                                                    <td rowspan="{{ $examinations->count() }}">
+                                                                        {{ $examination->assessor->user->full_name ?? 'N/A' }}
+                                                                    </td>
+                                                                    <td rowspan="{{ $examinations->count() }}">
+                                                                        {{ $examination->competencyElement->competencyStandard->unit_title }}
+                                                                    </td>
+                                                                @endif
+                                                                <td>
+                                                                    {{ $examination->competencyElement->criteria }}
+                                                                </td>
+                                                                <td>
+                                                                    @php
+                                                                        $score = $competencyScores[$examination->competencyElement->competencyStandard->id] ?? 0;
+                                                                        echo $score . '%';
+                                                                    @endphp
+                                                                </td>
+                                                                <td>
+                                                                    @php
+                                                                        $competencyLevel = $competencyLevels[$examination->competencyElement->competencyStandard->id] ?? 'Belum Dinilai';
+                                                                        echo $competencyLevel;
+                                                                    @endphp
+                                                                </td>
+                                                                @if ($loop->first)
+                                                                <td rowspan="{{ $examinations->count() }}">
+                                                                    @if ($competencyLevel !== 'Belum Kompeten')
+                                                                        <form action="/examinations/pdf" method="get">
+                                                                            <input type="hidden" name="standard_id" value="{{ $standardId }}">
+                                                                            <input type="submit" class="btn btn-primary" value="Lihat Sertifikat">
+                                                                        </form>
+                                                                    @else
+                                                                        <button class="btn btn-secondary" disabled>Lihat Sertifikat</button>
+                                                                    @endif
+                                                                </td>
+                                                                @endif
+                                                            </tr>
+                                                        @endforeach
+                                                    @endforeach
+                                                @else
+                                                    <tr>
+                                                        <td colspan="6">Tidak ada data ujian untuk ditampilkan.</td>
+                                                    </tr>
+                                                @endif
+                                            </tbody>
+                                        </table>
                                     </div>
-                                  </div>
                                 </div>
-
-                                <div class="table-responsive">
-                                  <table
-                                    id="add-row"
-                                    class="display table table-striped"
-                                  >
-                                    <thead>
-                                      <tr>
-                                        <th>Kode Unit</th>
-                                        <th>Judul Unit</th>
-                                        <th>Deskripsi</th>
-                                        <th>Jurusan</th>
-                                        <th>Kelas</th>
-                                        <th style="width: 10%">Aksi</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach ($competencyStandards as $standard)
-                                      <tr>
-                                        <td>{{ $standard->unit_code }}</td>
-                                        <td>{{ $standard->unit_title }}</td>
-                                        <td>{{ $standard->unit_description }}</td>
-                                        <td>{{ $standard->major->major_name ?? 'N/A' }}</td>
-                                        <td>{{ $standard->grade_level ?? 'N/A' }}</td>
-                                        <td class="d-flex">
-                                            <a href="/index/detail/{{ $standard->id }}"><button class="btn btn-success" style="margin-right: 10px">Detail</button></a>
-                                            <a href="/index/edit/{{ $standard->id }}"><button class="btn btn-primary" style="margin-right: 10px">Edit</button></a>
-                                            <a href="/index/delete/{{ $standard->id }}" onclick="return window.confirm('Yakin Hapus Data Ini?')" ><button class="btn btn-danger">Delete</button></a>
-                                        </td>
-                                      </tr>
-                                    @endforeach
-                                    </tbody>
-                                  </table>
-                                </div>
-                              </div>
                             </div>
-                          </div>
                         </div>
                     </div>
                 </div>
@@ -261,5 +255,13 @@
         });
       });
       </script>
+      <script>
+        $(document).ready(function () {
+            $("#examinations-table").DataTable({
+                pageLength: 5,
+                // Additional configuration can go here
+            });
+        });
+    </script>
    </body>
 </html>

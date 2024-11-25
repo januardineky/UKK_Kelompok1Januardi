@@ -34,6 +34,12 @@ class User extends Authenticatable
         return $this->hasOne(Assessor::class, 'user_id');
     }
 
+
+    public function student()
+    {
+        return $this->hasOne(Student::class, 'user_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

@@ -38,6 +38,11 @@ class UserController extends Controller
                 Alert::success('Success', 'Login assessor berhasil');
                 return redirect('/index');
             }
+            else if(auth()->user()->role === 'student') {
+                // $assessor = Assessor::where('user_id', auth()->user()->id)->first();
+                Alert::success('Success', 'Login siswa berhasil');
+                return redirect('/main');
+            }
         }
         Alert::error('Error', 'Username atau Password salah');
         return redirect('/');
@@ -48,13 +53,121 @@ class UserController extends Controller
         $user = Auth::user();
         $data = $user;
 
+        // Get the assessor associated with the logged-in user
         $assessor = $user->assessor;
 
-        $competencyStandards = CompetencyStandard::with(['major'])
-            ->where('assessor_id', $assessor->id)
-            ->get();
+        // Check if the assessor exists
+        if ($assessor) {
+            // Retrieve competency standards associated with the assessor
+            $competencyStandards = $assessor->competencyStandards()->with('elements')->get();
+        } else {
+            $competencyStandards = collect(); // Return an empty collection if no assessor found
+        }
 
+        // Pass the data to the view
         return view('dashboard-assessor', compact('data', 'competencyStandards'));
+    }
+
+    public function showStudentExaminations(Request $request)
+    {
+        // Get the authenticated user
+        $user = Auth::user();
+        $data = $user;
+
+        // Retrieve the student associated with the logged-in user
+        $student = Student::with(['major', 'examinations.assessor', 'examinations.competencyElement.competencyStandard'])
+            ->where('user_id', $user->id)
+            ->firstOrFail(); // This will throw a 404 error if the student is not found
+
+        // Retrieve all examinations for the student
+        $filteredExaminations = $student->examinations;
+
+        // Initialize variables for competency score calculation
+        $competencyScores = [];
+        $competencyLevels = [];
+
+        // Group examinations by competency standard
+        $examinationsByStandard = $filteredExaminations->groupBy(function ($examination) {
+            return $examination->competencyElement->competencyStandard->id;
+        });
+
+        // Calculate scores for each competency standard
+        foreach ($examinationsByStandard as $standardId => $examinations) {
+            $totalElements = $examinations->count();
+            $competentCount = $examinations->where('status', 1)->count();
+
+            if ($totalElements > 0) {
+                $percentage = round(($competentCount / $totalElements) * 100);
+                $competencyScores[$standardId] = $percentage;
+
+                // Determine competency level based on the percentage
+                if ($percentage >= 91) {
+                    $competencyLevels[$standardId] = 'Sangat Kompeten';
+                } elseif ($percentage >= 75) {
+                    $competencyLevels[$standardId] = 'Kompeten';
+                } elseif ($percentage >= 61) {
+                    $competencyLevels[$standardId] = 'Cukup Kompeten';
+                } else {
+                    $competencyLevels[$standardId] = 'Belum Kompeten';
+                }
+            } else {
+                $competencyScores[$standardId] = 0; // No examinations for this standard
+                $competencyLevels[$standardId] = 'Belum Dinilai'; // No evaluations
+            }
+        }
+
+        return view('dashboard-student', compact('student', 'competencyScores', 'competencyLevels', 'examinationsByStandard','data'));
+    }
+
+    public function provile()
+    {
+        $user = Auth::user();
+        $assessor = $user->student;
+        $data = $user;
+        return view('profile-student', compact('data','assessor'));
+    }
+
+    public function editprofilestudent($id)
+    {
+        $user = Auth::user();
+        $data = $user;
+        $majors = Major::all();
+        $assessor = Student::findOrFail($id);
+        return view('profile-student-edit', compact('assessor','data','majors'));
+    }
+
+    public function updateprofilestudent(Request $request, $id)
+    {
+        $student = Student::findOrFail($id);
+
+        // Update the user's information
+        $user = $student->user; // Assuming you have a relationship defined
+
+        // Update user attributes
+        $user->full_name = $request->full_name;
+        $user->email = $request->email;
+        $user->username = $request->username;
+        $user->phone_number = $request->phone_number;
+
+        // If a password is provided, hash it before saving
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
+        }
+
+        // Save user data
+        $user->save();
+
+        // Update the student's specific information
+        $student->nisn = $request->nisn;
+        $student->grade_level = $request->grade_level;
+        $student->major_id = $request->major_id;
+
+        // Save the student data
+        $student->save();
+
+        Alert::success('Success', 'Data berhasil diubah');
+        // Redirect back with a success message
+        return redirect('/main/profile');
     }
 
     public function profil()
@@ -767,7 +880,19 @@ class UserController extends Controller
         return redirect('/home');
     }
 
-    public function logout()
+    public function adminlogout()
+    {
+        Auth::logout();
+        return redirect('/');
+    }
+
+    public function assessorlogout()
+    {
+        Auth::logout();
+        return redirect('/');
+    }
+
+    public function studentlogout()
     {
         Auth::logout();
         return redirect('/');
