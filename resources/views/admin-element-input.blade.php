@@ -8,7 +8,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="viewport" content="initial-scale=1, maximum-scale=1">
       <!-- site metas -->
-      <title>Pluto - Responsive Bootstrap Admin Panel Templates</title>
+      <title>UKK Januardi</title>
       <meta name="keywords" content="">
       <meta name="description" content="">
       <meta name="author" content="">
@@ -272,16 +272,16 @@ label.light {
                         @endforeach
                       </select>
 
-                      <div id="criteria-container">
+                      {{-- <div id="criteria-container">
                         <button type="button" id="add-criteria" class="btn btn-primary">Tambah Kriteria</button>
                         <button type="button" id="remove-criteria" class="btn btn-danger btn-sm remove-criteria">Hapus</button>
-                      </div>
+                      </div> --}}
 
                     </fieldset>
 
                     <input type="submit" style="width: 100%"></input>
 
-                  </form>
+                    </form>
                </div>
                <!-- end dashboard inner -->
             </div>

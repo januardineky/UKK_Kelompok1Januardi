@@ -8,7 +8,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="viewport" content="initial-scale=1, maximum-scale=1">
       <!-- site metas -->
-      <title>Pluto - Responsive Bootstrap Admin Panel Templates</title>
+      <title>UKK Januardi</title>
       <meta name="keywords" content="">
       <meta name="description" content="">
       <meta name="author" content="">
@@ -277,12 +277,11 @@ label.light {
                             @endforeach
                         </select>
 
-                        <label for="grade_level">Kelas :</label>
-                        <select id="grade_level" name="grade_level">
-                            <option value=""></option>
-                            <option value="10">X</option>
-                            <option value="11">XI</option>
-                            <option value="12">XII</option>
+                        <label for="grade_level">Kelas:</label>
+                        <select id="grade_level" name="grade_level" required>
+                            <option value="10" {{ $competencyStandard->grade_level == 10 ? 'selected' : '' }}>X</option>
+                            <option value="11" {{ $competencyStandard->grade_level == 11 ? 'selected' : '' }}>XI</option>
+                            <option value="12" {{ $competencyStandard->grade_level == 12 ? 'selected' : '' }}>XII</option>
                         </select>
 
                         <label for="assessor">Penguji :</label>

@@ -124,6 +124,7 @@ class UserController extends Controller
         $user = Auth::user();
         $assessor = $user->student;
         $data = $user;
+        // dd($data);
         return view('profile-student', compact('data','assessor'));
     }
 
@@ -158,12 +159,7 @@ class UserController extends Controller
         $user->save();
 
         // Update the student's specific information
-        $student->nisn = $request->nisn;
-        $student->grade_level = $request->grade_level;
-        $student->major_id = $request->major_id;
 
-        // Save the student data
-        $student->save();
 
         Alert::success('Success', 'Data berhasil diubah');
         // Redirect back with a success message
@@ -232,9 +228,8 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        // dd($user->assessor);
-
-        CompetencyStandard::create([
+        // Step 1: Create the competency standard
+        $competencyStandard = CompetencyStandard::create([
             'unit_code' => $request->unit_code,
             'unit_title' => $request->unit_title,
             'unit_description' => $request->unit_description,
@@ -242,6 +237,38 @@ class UserController extends Controller
             'grade_level' => $request->grade_level,
             'assessor_id' => $user->assessor->id,
         ]);
+
+        // Step 2: Fetch students matching the major_id and grade_level
+        $students = Student::where('major_id', $competencyStandard->major_id)
+            ->where('grade_level', $competencyStandard->grade_level)
+            ->get();
+
+        // Step 3: Loop through each student and create examinations
+        foreach ($students as $student) {
+            // Fetch competency elements linked to the new competency standard
+            $competencyElements = CompetencyElement::where('competency_id', $competencyStandard->id)->get();
+
+            foreach ($competencyElements as $element) {
+                // Check if an examination already exists
+                $existingExamination = $student->examinations()->where('element_id', $element->id)
+                    ->whereHas('competencyElement.competencyStandard', function ($query) use ($competencyStandard) {
+                        $query->where('id', $competencyStandard->id);
+                    })->first();
+
+                // If no existing examination, create a new one
+                if (!$existingExamination) {
+                    Examination::create([
+                        'exam_date' => now(), // Set the exam date to now or a specific date
+                        'student_id' => $student->id,
+                        'assessor_id' => $competencyStandard->assessor_id, // Fetch the assessor_id from the competency standard
+                        'element_id' => $element->id,
+                        'status' => 0, // Set the initial status as needed
+                        'comment' => null, // Or set a default comment
+                    ]);
+                }
+            }
+        }
+
         Alert::success('Success', 'Data berhasil ditambahkan');
         return redirect('/index');
     }
@@ -259,22 +286,74 @@ class UserController extends Controller
     }
 
     public function updatecompetency(Request $request, $id)
-    {
-        $user = Auth::user();
-        $competencyStandards = CompetencyStandard::findOrFail($id);
+{
+    $user = Auth::user();
+    $competencyStandards = CompetencyStandard::findOrFail($id);
 
-        $competencyStandards->unit_code = $request->unit_code;
-        $competencyStandards->unit_title = $request->unit_title;
-        $competencyStandards->unit_description = $request->unit_description;
-        $competencyStandards->major_id = $request->major_id;
-        $competencyStandards->grade_level = $request->grade_level;
-        $competencyStandards->assessor_id = $user->assessor->id;
+    // Store old values for comparison
+    $oldGradeLevel = $competencyStandards->grade_level;
+    $oldMajorId = $competencyStandards->major_id;
 
-        $competencyStandards->save();
+    // Update competency standard details
+    $competencyStandards->unit_code = $request->unit_code;
+    $competencyStandards->unit_title = $request->unit_title;
+    $competencyStandards->unit_description = $request->unit_description;
+    $competencyStandards->major_id = $request->major_id;
+    $competencyStandards->grade_level = $request->grade_level;
+    $competencyStandards->assessor_id = $user->assessor->id;
 
-        Alert::success('Success', 'Data berhasil diubah');
+    // Save the updated competency standard
+    $competencyStandards->save();
 
-        return redirect('/index');
+    // Check if the grade level or major ID has changed
+    if ($oldGradeLevel != $competencyStandards->grade_level || $oldMajorId != $competencyStandards->major_id) {
+        // Fetch all students associated with the old major
+        $students = Student::where('major_id', $oldMajorId)->get();
+
+        foreach ($students as $student) {
+            // Check if the student's major or grade level is compatible
+            if ($student->grade_level != $competencyStandards->grade_level || $student->major_id != $competencyStandards->major_id) {
+                // Delete related examinations
+                $student->examinations()->whereHas('competencyElement.competencyStandard', function ($query) use ($id) {
+                    $query->where('id', $id);
+                })->delete();
+            }
+        }
+
+        // Now, create new examinations for students if they match the new major or grade level
+        $students = Student::where('major_id', $competencyStandards->major_id)
+            ->where('grade_level', $competencyStandards->grade_level)
+            ->get();
+
+        foreach ($students as $student) {
+            // Fetch competency elements linked to the updated competency standard
+            $competencyElements = CompetencyElement::where('competency_id', $competencyStandards->id)->get();
+
+            foreach ($competencyElements as $element) {
+                // Check if an examination already exists
+                $existingExamination = $student->examinations()->where('element_id', $element->id)
+                    ->whereHas('competencyElement.competencyStandard', function ($query) use ($competencyStandards) {
+                        $query->where('id', $competencyStandards->id);
+                    })->first();
+
+                // If no existing examination, create a new one
+                if (!$existingExamination) {
+                    Examination::create([
+                        'exam_date' => now(), // Set the exam date to now or a specific date
+                        'student_id' => $student->id,
+                        'assessor_id' => $competencyStandards->assessor_id, // Fetch the assessor_id from the competency standard
+                        'element_id' => $element->id,
+                        'status' => 0, // Set the initial status as needed
+                        'comment' => null, // Or set a default comment
+                    ]);
+                }
+            }
+        }
+    }
+
+    Alert::success('Success', 'Data berhasil diubah');
+
+    return redirect('/index');
     }
 
     public function showelement($id)

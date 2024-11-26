@@ -8,7 +8,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="viewport" content="initial-scale=1, maximum-scale=1">
       <!-- site metas -->
-      <title>Pluto - Responsive Bootstrap Admin Panel Templates</title>
+      <title>UKK Januardi</title>
       <meta name="keywords" content="">
       <meta name="description" content="">
       <meta name="author" content="">
@@ -245,30 +245,6 @@ label.light {
 
                         <label for="phone_number">Phone Number:</label>
                         <input type="text" id="phone_number" name="phone_number" value="{{ old('phone_number', $assessor->user->phone_number) }}" required>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend><span class="number">2</span> Specific</legend>
-
-                        <label for="nisn">NISN:</label>
-                        <input type="text" id="nisn" name="nisn" value="{{ old('nisn', $assessor->nisn) }}" required>
-
-                        <label for="grade_level">Kelas:</label>
-                        <select id="grade_level" name="grade_level" required>
-                            <option value="10" {{ $assessor->grade_level == 10 ? 'selected' : '' }}>X</option>
-                            <option value="11" {{ $assessor->grade_level == 11 ? 'selected' : '' }}>XI</option>
-                            <option value="12" {{ $assessor->grade_level == 12 ? 'selected' : '' }}>XII</option>
-                        </select>
-
-                        <label for="major">Jurusan:</label>
-                        <select id="major" name="major_id" required>
-                            <option value=""></option>
-                            @foreach ($majors as $major)
-                                <option value="{{ $major->id }}" {{ $assessor->major_id == $major->id ? 'selected' : '' }}>
-                                    {{ $major->major_name }}
-                                </option>
-                            @endforeach
-                        </select>
                     </fieldset>
 
                     <input type="submit" class="btn btn-primary" style="width: 100%" value="Update">

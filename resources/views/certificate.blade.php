@@ -48,6 +48,20 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #4CAF50;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -59,9 +73,27 @@
 
         <div class="competency-info">
             <p><strong>Competency Standard:</strong> {{ $competencyStandard->unit_title }}</p>
-            <p><strong>Score:</strong> {{ $percentage }}%</p>
+            <p><strong>Score:</strong> {{ $percentage }}</p>
             <p><strong>Status:</strong> {{ $competencyLevel }}</p>
         </div>
+
+        <h2>Examinations Details</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Elemen</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($examinations as $examination)
+                    <tr>
+                        <td>{{ $examination->competencyElement->criteria }}</td>
+                        <td>{{ $examination->status == 1 ? 'Kompeten' : 'Belum Kompeten' }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
 
         <div class="footer">
             <p>Issued on: {{ now()->format('d-m-Y') }}</p>

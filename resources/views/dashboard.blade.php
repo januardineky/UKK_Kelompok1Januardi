@@ -257,9 +257,9 @@
                                                             <span class="name_user">{{ $assessor->user->full_name }}</span>
                                                             <span class="msg_user">{{ $assessor->description }}</span>
                                                         </span>
-                                                        <span>
-                                                            <a href="/home/editassessor/{{ $assessor->id }}" class="btn btn-primary btn-xs full-width">Edit</a>
-                                                            <a href="/home/deleteassessor/{{ $assessor->id }}" onclick="return window.confirm('Yakin Hapus Data Penguji Ini?')" class="btn btn-danger btn-xs full-width">Delete</a>
+                                                        <span style="display: flex; gap: 10px;"> <!-- Flexbox for buttons -->
+                                                            <a href="/home/editassessor/{{ $assessor->id }}" class="btn btn-primary btn-xs">Edit</a>
+                                                            <a href="/home/deleteassessor/{{ $assessor->id }}" onclick="return window.confirm('Yakin Hapus Data Penguji Ini?')" class="btn btn-danger btn-xs">Delete</a>
                                                         </span>
                                                     </li>
                                                 @endif
@@ -284,16 +284,15 @@
                                                             <span class="name_user">{{ $assessor->user->full_name }}</span>
                                                             <span class="msg_user">{{ $assessor->description }}</span>
                                                         </span>
-                                                        <span>
-                                                            <a href="/home/editassessor/{{ $assessor->id }}" class="btn btn-primary btn-xs full-width">Edit</a>
-                                                            <a href="/home/deleteassessor/{{ $assessor->id }}" onclick="return window.confirm('Yakin Hapus Data Penguji Ini?')" class="btn btn-danger btn-xs full-width">Delete</a>
+                                                        <span style="display: flex; gap: 5px;">
+                                                            <a href="/home/editassessor/{{ $assessor->id }}" class="btn btn-primary btn-xs">Edit</a>
+                                                            <a href="/home/deleteassessor/{{ $assessor->id }}" onclick="return window.confirm('Yakin Hapus Data Penguji Ini?')" class="btn btn-danger btn-xs">Delete</a>
                                                         </span>
                                                     </li>
                                                 @endif
                                             @endforeach
                                         </ul>
                                     </div>
-                                </div>
                                 </div>
                             </div>
                         </div>

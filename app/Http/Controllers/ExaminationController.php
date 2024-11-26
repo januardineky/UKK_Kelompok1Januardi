@@ -50,13 +50,10 @@ class ExaminationController extends Controller
     $competencyStandard = $examinations->first()->competencyElement->competencyStandard;
 
     // Generate PDF
-    $pdf = PDF::loadView('certificate', compact('student', 'competencyStandard', 'percentage', 'competencyLevel'));
+    $pdf = PDF::loadView('certificate', compact('student', 'competencyStandard', 'percentage', 'competencyLevel', 'examinations'));
 
     // Download the PDF
     return $pdf->download('certificate_' . $standardId . '.pdf');
-
-    Alert::success('Success', 'Sertifikat Berhasil Dibuka');
-
     }
 
 }
